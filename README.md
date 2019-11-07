@@ -19,7 +19,7 @@ From within Xcode 11 or up you can add SwimpleAudio as a Swift Package:
 
 You're now able to import SwimpleAudio in your source code 🎉
 
-## Binding audio to `UIControl.Event` 🔊
+## Binding audio to a UIControl object 🔊
 ```swift
 class ViewController: UIViewController {
 
