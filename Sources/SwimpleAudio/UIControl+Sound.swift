@@ -11,15 +11,6 @@ import UIKit
 import AVFoundation
 import SwimpleInjection
 
-fileprivate var bindedSounds: [UIControl:[BindedSound]] = [:]
-
-fileprivate struct BindedSound {
-    let sound: Sound
-    let controlEvents: UIControl.Event
-    let repeats: UInt
-    let delay: DispatchTimeInterval
-}
-
 public extension UIControl {
     
     func addSound(
@@ -33,33 +24,36 @@ public extension UIControl {
         let sound = soundLoader.loadSound(named: fileName)
         
         // Bind Sound to UIControl.Event
-        var currentlyBindedSounds = bindedSounds[self] ?? []
-        currentlyBindedSounds.append(BindedSound(
-            sound: sound,
-            controlEvents: controlEvents,
-            repeats: repeats,
-            delay: delay
-        ))
-        bindedSounds[self] = currentlyBindedSounds
-        addTarget(self, action: #selector(playSound(for:on:)), for: controlEvents)
+        addAction(for: controlEvents) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                sound.player.numberOfLoops = Int(repeats)
+                sound.player.play()
+            }
+        }
     }
     
-    func removeSounds() {
-        bindedSounds.removeValue(forKey: self)
+    func removeTargets() {
+        removeTarget(nil, action: nil, for: .allEvents)
+    }
+}
+
+@objc private class ClosureSleeve: NSObject {
+    let closure: ()->()
+
+    init (_ closure: @escaping ()->()) {
+        self.closure = closure
+    }
+
+    @objc func invoke () {
+        closure()
     }
 }
 
 private extension UIControl {
-    
-    @objc func playSound(for control: UIControl, on controlEvents: Event) {
-        bindedSounds[control]?
-            .filter({ controlEvents.contains($0.controlEvents) })
-            .forEach({ (bindedSound) in
-                DispatchQueue.main.asyncAfter(deadline: .now() + bindedSound.delay) {
-                    bindedSound.sound.player.numberOfLoops = Int(bindedSound.repeats)
-                    bindedSound.sound.player.play()
-                }
-            })
+    func addAction(for controlEvents: UIControl.Event = .touchUpInside, _ closure: @escaping ()->()) {
+        let sleeve = ClosureSleeve(closure)
+        addTarget(sleeve, action: #selector(ClosureSleeve.invoke), for: controlEvents)
+        objc_setAssociatedObject(self, "[\(arc4random())]", sleeve, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
     }
 }
 
