@@ -36,11 +36,11 @@ class ViewController: UIViewController {
   }
 }
 ```
-Delaying a sound effect after a UIControl.Event triggers.
+Delaying a sound effect after an UIControl.Event triggers.
 ```swift
 button.addSound(named: "button_click.mp3", for: .touchUpInside, delay: .seconds(3))
 ```
-Repeating a sound effect a number of times after a UIControl.Event triggers.
+Repeating a sound effect a number of times after an UIControl.Event triggers.
 ```swift
 button.addSound(named: "button_click.mp3", for: .touchUpInside, repeats: 5)
 ```
