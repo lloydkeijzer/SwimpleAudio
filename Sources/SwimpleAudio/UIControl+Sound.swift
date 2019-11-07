@@ -53,7 +53,7 @@ private extension UIControl {
     
     @objc func playSound(for control: UIControl, on controlEvents: Event) {
         bindedSounds[control]?
-            .filter({ $0.controlEvents == controlEvents })
+            .filter({ controlEvents.contains($0.controlEvents) })
             .forEach({ (bindedSound) in
                 DispatchQueue.main.asyncAfter(deadline: .now() + bindedSound.delay) {
                     bindedSound.sound.player.numberOfLoops = Int(bindedSound.repeats)
