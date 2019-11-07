@@ -18,3 +18,20 @@ From within Xcode 11 or up you can add SwimpleAudio as a Swift Package:
 5. Select the version you want to use and click next
 
 You're now able to import SwimpleAudio in your source code 🎉
+
+## Binding audio to `UIControl.Event` 🔊
+```swift
+class ViewController: UIViewController {
+
+  let button = UIButton()
+
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    button.addSound(named: "button_click.mp3", for: .touchUpInside)
+  }
+  
+  deinit {
+    button.removeTargets()
+  }
+}
+```
