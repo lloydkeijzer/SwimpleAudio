@@ -19,7 +19,8 @@ From within Xcode 11 or up you can add SwimpleAudio as a Swift Package:
 
 You're now able to import SwimpleAudio in your source code 🎉
 
-## Binding audio to an action of a UIControl object 🔊
+## Binding audio 🔊
+You can easily bind any sound effect to an action of a UIControl object.
 ```swift
 class ViewController: UIViewController {
 
@@ -34,4 +35,12 @@ class ViewController: UIViewController {
     button.removeTargets()
   }
 }
+```
+Delaying a sound effect after a UIControl.Event triggers.
+```swift
+button.addSound(named: "button_click.mp3", for: .touchUpInside, delay: .seconds(3))
+```
+Repeating a sound effect a number of times after a UIControl.Event triggers.
+```swift
+button.addSound(named: "button_click.mp3", for: .touchUpInside, repeats: 5)
 ```
