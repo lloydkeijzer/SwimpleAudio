@@ -17,7 +17,7 @@ public extension UIControl {
         named fileName: String,
         for controlEvents: Event,
         repeats: UInt = 0,
-        delay: DispatchTimeInterval = .never
+        delay: DispatchTimeInterval = .seconds(0)
     ) {
         // Load Sound
         let soundLoader = container.resolve(SoundLoader.self)
